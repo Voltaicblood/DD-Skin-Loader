@@ -1,13 +1,9 @@
 package main;
 
-import java.awt.Dimension;
-
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 public class ClassList extends JList<String> {
 

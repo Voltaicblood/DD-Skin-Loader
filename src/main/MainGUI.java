@@ -3,22 +3,20 @@ package main;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.Arrays;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
-import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 public class MainGUI extends JPanel implements ActionListener{
 	
@@ -32,7 +30,6 @@ public class MainGUI extends JPanel implements ActionListener{
 	public MainGUI(){
 		setLayout(new BorderLayout());
 		//fileList.addListSelectionListener(this);
-		
 		loadButton.addActionListener(this);
 		removeButton.addActionListener(this);
 		fixSkins.addActionListener(this);
@@ -51,17 +48,29 @@ public class MainGUI extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent event) {
 		
 		if(event.getSource() == loadButton){
-			ClassList currentList = tabs.addTab("Test" + count);
-			int index = 5;
-			while(index > 0){
-				currentList.addFile("Item #" + count);
-				count++;
-				index--;
-			}
+			JFileChooser chooser = new JFileChooser();
+			File currentDirectory = new File("");
+		    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		    if(chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
+		    	currentDirectory = chooser.getSelectedFile();
+		    	System.out.println(currentDirectory);
+		    }
+		    int result = JOptionPane.showConfirmDialog(null, "Confirm Darkest Dungeon Directory: " + currentDirectory, null, JOptionPane.YES_NO_OPTION);
+		    if(result == JOptionPane.YES_OPTION){
+		    	File file = new File("/skins");
+		    	String[] directories = file.list(new FilenameFilter() {
+		    	  @Override
+		    	  public boolean accept(File current, String name) {
+		    	    return new File(current, name).isDirectory();
+		    	  }
+		    	});
+		    	System.out.println(Arrays.toString(directories));
+		    }
 		}
-		
+	}
+		/*
 		if(event.getSource() == removeButton){
-			ClassList currentList = tabs.getList();
+			ClassList currentList = tabs.getListCurrent();
 			if (currentList.getSelected() < currentList.length()){
 				currentList.removeFile(currentList.getSelected());
 				count--;
@@ -72,7 +81,7 @@ public class MainGUI extends JPanel implements ActionListener{
 			
 		}
 	}
-	
+	*/
 	public static void createAndShowGUI(){
 		JFrame frame = new JFrame("Darkest Dungeon Skin Loader");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -84,6 +93,8 @@ public class MainGUI extends JPanel implements ActionListener{
 		frame.setVisible(true);
 	}
 
-
+	public String parseClass(String fileName){
+		return fileName.substring(0, 2);
+	}
 
 }
